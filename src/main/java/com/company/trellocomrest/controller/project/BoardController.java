@@ -1,9 +1,9 @@
 package com.company.trellocomrest.controller.project;
 
 import com.company.trellocomrest.controller.ApiController;
-import com.company.trellocomrest.domains.project.Board;
-import com.company.trellocomrest.dtos.project.BoardCreateDto;
-import com.company.trellocomrest.dtos.project.BoardUpdateDto;
+import com.company.trellocomrest.dtos.project.board.BoardCreateDto;
+import com.company.trellocomrest.dtos.project.board.BoardDto;
+import com.company.trellocomrest.dtos.project.board.BoardUpdateDto;
 import com.company.trellocomrest.enums.BoardType;
 import com.company.trellocomrest.response.ApiResponse;
 import com.company.trellocomrest.services.project.BoardService;
@@ -24,17 +24,17 @@ public class BoardController extends ApiController<BoardService> {
     }
 
     @GetMapping(value = PATH + "/board/get/{id}", produces = "application/json")
-    public ApiResponse<Board> get(@PathVariable Long id) {
+    public ApiResponse<BoardDto> get(@PathVariable Long id) {
         return new ApiResponse<>(service.get(id));
     }
 
-    @GetMapping(value = PATH + "/board/getAll", produces = "application/json")
-    public List<Board> getAll() {
-        return service.getAll();
+    @GetMapping(value = PATH + "/board/getAll/{id}", produces = "application/json")
+    public List<BoardDto> getAll(@PathVariable Long id) {
+        return service.getAll(id);
     }
 
     @PutMapping(value = PATH + "/board/update", produces = "application/json")
-    public ApiResponse<Board> update(@Valid @RequestBody BoardUpdateDto boardUpdateDto) {
+    public ApiResponse<BoardDto> update(@Valid @RequestBody BoardUpdateDto boardUpdateDto) {
         return service.update(boardUpdateDto);
     }
 

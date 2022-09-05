@@ -1,4 +1,4 @@
-package com.company.trellocomrest.dtos.project;
+package com.company.trellocomrest.dtos.project.board;
 
 import lombok.*;
 
@@ -10,7 +10,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BoardCreateDto {
+public class BoardUpdateDto {
+    @NotNull(message = "Id can not be null!")
+    private Long id;
+
     @NotBlank(message = "Title can not be blank!")
     private String title;
 
@@ -19,7 +22,4 @@ public class BoardCreateDto {
 
     @NotBlank(message = "Board type can not be blank!")
     private String boardType;
-
-    @NotNull(message = "Workspace id can not be null!")
-    private Long workspaceId;
 }

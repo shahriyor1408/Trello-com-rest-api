@@ -1,4 +1,4 @@
-package com.company.trellocomrest.dtos.project;
+package com.company.trellocomrest.dtos.project.workspace;
 
 import com.company.trellocomrest.dtos.AuditableDto;
 import lombok.*;
@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 public class WorkspaceDto extends AuditableDto {
     private String name;
     private String description;
-    private String workspaceType;
+    private String workSpaceType;
     private String workspaceVisibility;
 
     @Builder(builderMethodName = "childBuilder")
@@ -20,11 +20,11 @@ public class WorkspaceDto extends AuditableDto {
                         Long createdBy, Timestamp updatedAt,
                         Long updatedBy, boolean isDeleted,
                         String name, String description,
-                        String workspaceType, String workspaceVisibility) {
+                        String workSpaceType, String workspaceVisibility) {
         super(id, createdAt, createdBy, updatedAt, updatedBy, isDeleted);
         this.name = name;
         this.description = description;
-        this.workspaceType = workspaceType;
+        this.workSpaceType = workSpaceType;
         this.workspaceVisibility = workspaceVisibility;
     }
 }

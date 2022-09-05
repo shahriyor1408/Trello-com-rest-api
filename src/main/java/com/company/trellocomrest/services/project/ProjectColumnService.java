@@ -1,12 +1,15 @@
 package com.company.trellocomrest.services.project;
 
 import com.company.trellocomrest.domains.project.ProjectColumn;
-import com.company.trellocomrest.dtos.project.ProjectColumnCreateDto;
-import com.company.trellocomrest.dtos.project.ProjectColumnUpdateDto;
+import com.company.trellocomrest.dtos.project.project_column.ProjectColumnCreateDto;
+import com.company.trellocomrest.dtos.project.project_column.ProjectColumnDto;
+import com.company.trellocomrest.dtos.project.project_column.ProjectColumnUpdateDto;
+import com.company.trellocomrest.exceptions.GenericNotFoundException;
 import com.company.trellocomrest.mappers.ProjectColumnMapper;
+import com.company.trellocomrest.repository.project.BoardRepository;
 import com.company.trellocomrest.repository.project.ProjectColumnRepository;
 import com.company.trellocomrest.response.ApiResponse;
-import com.company.trellocomrest.services.AuthUserService;
+import com.company.trellocomrest.services.auth.AuthUserService;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.stereotype.Service;
@@ -20,30 +23,47 @@ import java.util.List;
 @ParameterObject
 public class ProjectColumnService {
     private final ProjectColumnRepository projectColumnRepository;
+    private final BoardRepository boardRepository;
     private final ProjectColumnMapper projectColumnMapper;
     private final AuthUserService authUserService;
 
     public Long create(ProjectColumnCreateDto dto) {
         ProjectColumn projectColumn = projectColumnMapper.fromCreateDto(dto);
-        projectColumn.setColumnOrder(projectColumnRepository.findAllNotDelete().size() + 1);
+        projectColumn.setColumnOrder(projectColumnRepository.findAllNotDelete(dto.getBoardId()).size() + 1);
         projectColumn.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
         projectColumn.setCreatedBy(authUserService.getCurrentAuthUser().getId());
-        return null;
+        projectColumn.setBoard(boardRepository.getByIdAndIsDeleted(dto.getBoardId()).orElseThrow(() -> {
+            throw new GenericNotFoundException("Board not found!", 404);
+        }));
+        return projectColumnRepository.save(projectColumn).getId();
     }
 
-    public ProjectColumn get(Long id) {
-        return null;
+    public ProjectColumnDto get(Long id) {
+        return projectColumnMapper.toDto(projectColumnRepository.getByIdAndIsDeleted(id).orElseThrow(() -> {
+            throw new GenericNotFoundException("Project column not found!", 404);
+        }));
     }
 
-    public List<ProjectColumn> getAll() {
-        return null;
+    public List<ProjectColumnDto> getAll(Long id) {
+        return projectColumnMapper.toDto(projectColumnRepository.findAllNotDelete(id));
     }
 
-    public ApiResponse<ProjectColumn> update(ProjectColumnUpdateDto projectColumnUpdateDto) {
-        return null;
+    public ApiResponse<ProjectColumnDto> update(ProjectColumnUpdateDto projectColumnUpdateDto) {
+        ProjectColumn projectColumn = projectColumnRepository.getByIdAndIsDeleted(projectColumnUpdateDto.getId()).orElseThrow(() -> {
+            throw new GenericNotFoundException("Project column not found!", 404);
+        });
+        projectColumnMapper.fromUpdateDto(projectColumnUpdateDto, projectColumn);
+        projectColumn.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        projectColumn.setUpdatedBy(authUserService.getCurrentAuthUser().getId());
+        return new ApiResponse<>(projectColumnMapper.toDto(projectColumnRepository.save(projectColumn)));
     }
 
     public ApiResponse<Void> delete(Long id) {
-        return null;
+        ProjectColumn projectColumn = projectColumnRepository.getByIdAndIsDeleted(id).orElseThrow(() -> {
+            throw new GenericNotFoundException("Project column not found!", 404);
+        });
+        projectColumn.setDeleted(true);
+        projectColumnRepository.save(projectColumn);
+        return new ApiResponse<>(200, true);
     }
 }

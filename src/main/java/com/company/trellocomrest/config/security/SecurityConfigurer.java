@@ -1,7 +1,7 @@
 package com.company.trellocomrest.config.security;
 
 import com.company.trellocomrest.config.security.jwt.JWTFilter;
-import com.company.trellocomrest.services.AuthUserService;
+import com.company.trellocomrest.services.auth.AuthUserService;
 import com.company.trellocomrest.utils.jwt.TokenService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

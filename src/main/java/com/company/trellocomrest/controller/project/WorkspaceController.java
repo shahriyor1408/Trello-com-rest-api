@@ -1,10 +1,9 @@
 package com.company.trellocomrest.controller.project;
 
 import com.company.trellocomrest.controller.ApiController;
-import com.company.trellocomrest.domains.project.Workspace;
-import com.company.trellocomrest.dtos.project.WorkspaceCreateDto;
-import com.company.trellocomrest.dtos.project.WorkspaceDto;
-import com.company.trellocomrest.dtos.project.WorkspaceUpdateDto;
+import com.company.trellocomrest.dtos.project.workspace.WorkspaceCreateDto;
+import com.company.trellocomrest.dtos.project.workspace.WorkspaceDto;
+import com.company.trellocomrest.dtos.project.workspace.WorkspaceUpdateDto;
 import com.company.trellocomrest.enums.WorkspaceType;
 import com.company.trellocomrest.response.ApiResponse;
 import com.company.trellocomrest.services.project.WorkspaceService;
@@ -25,7 +24,7 @@ public class WorkspaceController extends ApiController<WorkspaceService> {
     }
 
     @GetMapping(value = PATH + "/workspace/get/{id}", produces = "application/json")
-    public ApiResponse<Workspace> get(@PathVariable Long id) {
+    public ApiResponse<WorkspaceDto> get(@PathVariable Long id) {
         return new ApiResponse<>(service.get(id));
     }
 

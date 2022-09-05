@@ -1,4 +1,4 @@
-package com.company.trellocomrest.dtos.project;
+package com.company.trellocomrest.dtos.project.project_column;
 
 import lombok.*;
 
@@ -10,10 +10,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProjectColumnCreateDto {
+public class ProjectColumnUpdateDto {
+    @NotNull(message = "Id can not be null!")
+    private Long id;
+
     @NotBlank(message = "Title can not be null!")
     private String title;
-
-    @NotNull(message = "Board id can not be null!")
-    private Long boardId;
 }

@@ -2,8 +2,9 @@ package com.company.trellocomrest.controller.project;
 
 import com.company.trellocomrest.controller.ApiController;
 import com.company.trellocomrest.domains.project.ProjectColumn;
-import com.company.trellocomrest.dtos.project.ProjectColumnCreateDto;
-import com.company.trellocomrest.dtos.project.ProjectColumnUpdateDto;
+import com.company.trellocomrest.dtos.project.project_column.ProjectColumnCreateDto;
+import com.company.trellocomrest.dtos.project.project_column.ProjectColumnDto;
+import com.company.trellocomrest.dtos.project.project_column.ProjectColumnUpdateDto;
 import com.company.trellocomrest.response.ApiResponse;
 import com.company.trellocomrest.services.project.ProjectColumnService;
 import org.springframework.web.bind.annotation.*;
@@ -23,17 +24,17 @@ public class ProjectColumnController extends ApiController<ProjectColumnService>
     }
 
     @GetMapping(value = PATH + "/projectColumn/get/{id}", produces = "application/json")
-    public ApiResponse<ProjectColumn> get(@PathVariable Long id) {
+    public ApiResponse<ProjectColumnDto> get(@PathVariable Long id) {
         return new ApiResponse<>(service.get(id));
     }
 
-    @GetMapping(value = PATH + "/projectColumn/getAll", produces = "application/json")
-    public List<ProjectColumn> getAll() {
-        return service.getAll();
+    @GetMapping(value = PATH + "/projectColumn/getAll/{id}", produces = "application/json")
+    public List<ProjectColumnDto> getAll(@PathVariable Long id) {
+        return service.getAll(id);
     }
 
     @PutMapping(value = PATH + "/projectColumn/update", produces = "application/json")
-    public ApiResponse<ProjectColumn> update(@Valid @RequestBody ProjectColumnUpdateDto projectColumnUpdateDto) {
+    public ApiResponse<ProjectColumnDto> update(@Valid @RequestBody ProjectColumnUpdateDto projectColumnUpdateDto) {
         return service.update(projectColumnUpdateDto);
     }
 

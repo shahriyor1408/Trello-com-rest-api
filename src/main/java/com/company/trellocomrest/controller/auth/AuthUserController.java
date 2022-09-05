@@ -7,7 +7,7 @@ import com.company.trellocomrest.dtos.LoginRequest;
 import com.company.trellocomrest.dtos.RefreshTokenRequest;
 import com.company.trellocomrest.dtos.UserRegisterDTO;
 import com.company.trellocomrest.response.ApiResponse;
-import com.company.trellocomrest.services.AuthUserService;
+import com.company.trellocomrest.services.auth.AuthUserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

@@ -1,7 +1,7 @@
 package com.company.trellocomrest.config.security.jwt;
 
 import com.company.trellocomrest.config.security.UserDetails;
-import com.company.trellocomrest.services.AuthUserService;
+import com.company.trellocomrest.services.auth.AuthUserService;
 import com.company.trellocomrest.utils.jwt.TokenService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

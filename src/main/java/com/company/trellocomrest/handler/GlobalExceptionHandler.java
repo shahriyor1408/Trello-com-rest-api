@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +23,6 @@ public class GlobalExceptionHandler {
     public ApiResponse<ApiErrorResponse> handle404(GenericNotFoundException e, HttpServletRequest request) {
         return new ApiResponse<>(ApiErrorResponse.builder()
                 .friendlyMessage(e.getMessage())
-                .developerMessage(Arrays.toString(e.getStackTrace()))
                 .requestPath(request.getRequestURL().toString())
                 .build(),
                 e.getStatusCode());

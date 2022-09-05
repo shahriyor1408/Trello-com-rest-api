@@ -1,18 +1,17 @@
 package com.company.trellocomrest.mappers;
 
 import com.company.trellocomrest.domains.project.Workspace;
-import com.company.trellocomrest.dtos.project.WorkspaceCreateDto;
-import com.company.trellocomrest.dtos.project.WorkspaceDto;
-import com.company.trellocomrest.dtos.project.WorkspaceUpdateDto;
+import com.company.trellocomrest.dtos.project.workspace.WorkspaceCreateDto;
+import com.company.trellocomrest.dtos.project.workspace.WorkspaceDto;
+import com.company.trellocomrest.dtos.project.workspace.WorkspaceUpdateDto;
 import org.mapstruct.Mapper;
-
-import java.util.List;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface WorkspaceMapper {
     Workspace fromCreateDto(WorkspaceCreateDto dto);
 
-    Workspace fromUpdateDto(WorkspaceUpdateDto dto);
+    void fromUpdateDto(WorkspaceUpdateDto dto, @MappingTarget Workspace workspace);
 
-    List<WorkspaceDto> toDto(List<Workspace> workspaces);
+    WorkspaceDto toDto(Workspace workspaces);
 }

@@ -1,4 +1,4 @@
-package com.company.trellocomrest.dtos.project;
+package com.company.trellocomrest.dtos.project.workspace;
 
 import lombok.*;
 

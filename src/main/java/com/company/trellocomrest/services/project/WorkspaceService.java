@@ -2,14 +2,14 @@ package com.company.trellocomrest.services.project;
 
 import com.company.trellocomrest.domains.auth.AuthUser;
 import com.company.trellocomrest.domains.project.Workspace;
-import com.company.trellocomrest.dtos.project.WorkspaceCreateDto;
-import com.company.trellocomrest.dtos.project.WorkspaceDto;
-import com.company.trellocomrest.dtos.project.WorkspaceUpdateDto;
+import com.company.trellocomrest.dtos.project.workspace.WorkspaceCreateDto;
+import com.company.trellocomrest.dtos.project.workspace.WorkspaceDto;
+import com.company.trellocomrest.dtos.project.workspace.WorkspaceUpdateDto;
 import com.company.trellocomrest.exceptions.GenericNotFoundException;
 import com.company.trellocomrest.mappers.WorkspaceMapper;
 import com.company.trellocomrest.repository.project.WorkspaceRepository;
 import com.company.trellocomrest.response.ApiResponse;
-import com.company.trellocomrest.services.AuthUserService;
+import com.company.trellocomrest.services.auth.AuthUserService;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
@@ -40,35 +40,36 @@ public class WorkspaceService {
         return workspace.getId();
     }
 
-    public Workspace get(Long id) {
-        return workspaceRepository.findById(id).orElseThrow(() -> {
+    public WorkspaceDto get(Long id) {
+        return workspaceMapper.toDto(workspaceRepository.getByIdAndIsDeleted(id).orElseThrow(() -> {
             throw new GenericNotFoundException("User not found!", 404);
-        });
+        }));
     }
 
     public List<WorkspaceDto> getAll() {
-        return workspaceMapper.toDto(workspaceRepository.findAllNotDeleted(authUserService.getCurrentAuthUser().getId()));
+        List<Workspace> workspaces = workspaceRepository.findAllNotDeleted(authUserService.getCurrentAuthUser().getId());
+        List<WorkspaceDto> workspaceDTOS = new ArrayList<>();
+        workspaces.forEach(workspace -> workspaceDTOS.add(workspaceMapper.toDto(workspace)));
+        return workspaceDTOS;
     }
 
     public ApiResponse<WorkspaceDto> update(WorkspaceUpdateDto dto) {
-        Workspace workspaceUpdate = workspaceMapper.fromUpdateDto(dto);
         Workspace workspace = workspaceRepository.findById(dto.getId()).orElseThrow(() -> {
             throw new GenericNotFoundException("WorkSpace not found!", 404);
         });
-        workspaceUpdate.setAuthUsers(workspace.getAuthUsers());
-        workspaceUpdate.setCreatedAt(workspace.getCreatedAt());
-        workspaceUpdate.setCreatedBy(workspace.getCreatedBy());
-        workspaceUpdate.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
-        workspaceUpdate.setUpdatedBy(authUserService.getCurrentAuthUser().getId());
-        workspaceRepository.save(workspaceUpdate);
-        return new ApiResponse<>();
+        workspaceMapper.fromUpdateDto(dto, workspace);
+        workspace.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        workspace.setUpdatedBy(authUserService.getCurrentAuthUser().getId());
+        workspaceRepository.save(workspace);
+        return new ApiResponse<>(workspaceMapper.toDto(workspace));
     }
 
     public ApiResponse<Void> delete(Long id) {
-        Workspace workspace = workspaceRepository.findById(id).orElseThrow(() -> {
+        Workspace workspace = workspaceRepository.getByIdAndIsDeleted(id).orElseThrow(() -> {
             throw new GenericNotFoundException("Workspace not found!", 404);
         });
         workspace.setDeleted(true);
-        return new ApiResponse<>(HttpStatus.OK.value());
+        workspaceRepository.save(workspace);
+        return new ApiResponse<>(HttpStatus.OK.value(), true);
     }
 }

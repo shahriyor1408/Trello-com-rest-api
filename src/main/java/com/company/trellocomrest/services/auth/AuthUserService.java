@@ -1,4 +1,4 @@
-package com.company.trellocomrest.services;
+package com.company.trellocomrest.services.auth;
 
 import com.company.trellocomrest.config.security.UserDetails;
 import com.company.trellocomrest.domains.auth.ActivationCode;
@@ -13,7 +13,6 @@ import com.company.trellocomrest.exceptions.GenericNotFoundException;
 import com.company.trellocomrest.exceptions.GenericRuntimeException;
 import com.company.trellocomrest.mappers.AuthUserMapper;
 import com.company.trellocomrest.repository.AuthUserRepository;
-import com.company.trellocomrest.services.auth.ActivationCodeService;
 import com.company.trellocomrest.services.mail.MailService;
 import com.company.trellocomrest.utils.jwt.TokenService;
 import lombok.NonNull;
