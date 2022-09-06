@@ -27,9 +27,9 @@ public class CartController extends ApiController<CartService> {
         return new ApiResponse<>(service.get(id));
     }
 
-    @GetMapping(value = PATH + "/cart/getAll", produces = "application/json")
-    public List<CartDto> getAll() {
-        return service.getAll();
+    @GetMapping(value = PATH + "/cart/getAll/{id}", produces = "application/json")
+    public List<CartDto> getAll(@PathVariable Long id) {
+        return service.getAll(id);
     }
 
     @PutMapping(value = PATH + "/cart/update", produces = "application/json")

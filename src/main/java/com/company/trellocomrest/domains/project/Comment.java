@@ -4,7 +4,10 @@ import com.company.trellocomrest.domains.Auditable;
 import com.company.trellocomrest.domains.auth.AuthUser;
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 
 @Entity

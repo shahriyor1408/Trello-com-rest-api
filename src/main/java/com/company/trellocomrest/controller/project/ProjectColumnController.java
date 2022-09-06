@@ -1,10 +1,10 @@
 package com.company.trellocomrest.controller.project;
 
 import com.company.trellocomrest.controller.ApiController;
-import com.company.trellocomrest.domains.project.ProjectColumn;
 import com.company.trellocomrest.dtos.project.project_column.ProjectColumnCreateDto;
 import com.company.trellocomrest.dtos.project.project_column.ProjectColumnDto;
 import com.company.trellocomrest.dtos.project.project_column.ProjectColumnUpdateDto;
+import com.company.trellocomrest.events.project.ProjectColumnMoveEvent;
 import com.company.trellocomrest.response.ApiResponse;
 import com.company.trellocomrest.services.project.ProjectColumnService;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +41,10 @@ public class ProjectColumnController extends ApiController<ProjectColumnService>
     @DeleteMapping(value = PATH + "projectColumn/delete/{id}", produces = "application/json")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         return service.delete(id);
+    }
+
+    @PutMapping(value = PATH + "/projectColumn/move", produces = "application/json")
+    public ApiResponse<Void> move(@Valid @RequestBody ProjectColumnMoveEvent projectColumnMoveEvent) {
+        return service.move(projectColumnMoveEvent);
     }
 }

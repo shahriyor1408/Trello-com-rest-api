@@ -14,6 +14,8 @@ import com.company.trellocomrest.services.auth.AuthUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,27 +31,47 @@ public class CartService {
         Cart cart = cartMapper.fromCreateDto(dto);
         cart.setCartOrder(cartRepository.findAllNotDeleted().size() + 1);
         cart.setCreatedBy(authUserService.getCurrentAuthUser().getId());
+        cart.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
         cart.setAuthUsers(new ArrayList<>());
         ProjectColumn projectColumn = projectColumnRepository.findById(dto.getProjectColumnId()).orElseThrow(() -> {
             throw new GenericNotFoundException("Project column not found!", 404);
         });
+        if (projectColumn.isDeleted()) {
+            throw new GenericNotFoundException("Project column not found!", 404);
+        }
         cart.setProjectColumn(projectColumn);
         return cartRepository.save(cart).getId();
     }
 
     public CartDto get(Long id) {
-        return null;
+        Cart cart = cartRepository.getByIdNotDeleted(id).orElseThrow(() -> {
+            throw new GenericNotFoundException("Project column not found!", 404);
+        });
+        return cartMapper.toDto(cart);
     }
 
-    public List<CartDto> getAll() {
-        return null;
+    public List<CartDto> getAll(Long id) {
+        List<Cart> carts = cartRepository.findAllNotDeletedById(id);
+        return cartMapper.toDto(carts);
     }
 
     public ApiResponse<CartDto> update(CartUpdateDto cartUpdateDto) {
-        return null;
+        Cart cart = cartRepository.getByIdNotDeleted(cartUpdateDto.getId()).orElseThrow(() -> {
+            throw new GenericNotFoundException("Cart not found!", 404);
+        });
+        cartMapper.fromUpdateDto(cartUpdateDto, cart);
+        cart.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        cart.setUpdatedBy(authUserService.getCurrentAuthUser().getId());
+        cartRepository.save(cart);
+        return new ApiResponse<>(cartMapper.toDto(cart));
     }
 
     public ApiResponse<Void> delete(Long id) {
-        return null;
+        Cart cart = cartRepository.getByIdNotDeleted(id).orElseThrow(() -> {
+            throw new GenericNotFoundException("Cart not found!", 404);
+        });
+        cart.setDeleted(true);
+        cartRepository.save(cart);
+        return new ApiResponse<>(200, true);
     }
 }
